@@ -9,3 +9,35 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Products {
+  product_UUID     String    @id @default(uuid()) @db.VarChar(36)
+  product_name     String    @db.VarChar(20)
+  product_description String @db.Text
+  product_price    Float
+  product_quantity Int      @default(1) 
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+  Orders           Order[]  @relation("belong_Products")
+}
+
+model User {
+  user_UUID    String    @id @default(uuid()) @db.VarChar(36)
+  user_pseudo  String    @unique @db.VarChar(20)
+  username     String    @unique @db.VarChar(30)
+  user_password String   @db.VarChar(72)
+  created_at   DateTime  @default(now())
+  Orders       Order[]   @relation("is_ordered_by")
+}
+
+model Order {
+  order_number    Int        @id @default(autoincrement())
+  order_total_cost_ht Int
+  order_total_quantity Int
+  created_at      DateTime   @default(now())
+  deliver_at      DateTime
+  user_UUID       String     @db.VarChar(36)
+  User            User       @relation("is_ordered_by", fields: [user_UUID], references: [user_UUID])
+  Products        Products   @relation("belong_Products", fields: [product_UUID], references: [product_UUID])
+  product_UUID    String    
+}
