@@ -11,7 +11,7 @@ export class OrdersController {
 
   @Post()
   create(@Body() createOrderDto: CreateOrderDto) {
-    return this.ordersService.create(createOrderDto);
+    return this.ordersService.createOrder(createOrderDto);
   }
   @Get()
   findOne(@Param('NumberOrder') order_number: number) {

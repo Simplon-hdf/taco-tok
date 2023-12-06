@@ -2,6 +2,7 @@
 <img src="tacoTok.jpg" />
 </p>
 
+          
 # E-Commerce API
 
 [Management Rules](management_rules.md) 
