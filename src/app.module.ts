@@ -3,8 +3,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProductsModule } from './products/products.module';
 import { OrdersModule } from './orders/orders.module';
+import { UsersModule } from './users/users.module';
 @Module({
-  imports: [OrdersModule, ProductsModule],
+  imports: [OrdersModule, ProductsModule , UsersModule],
   controllers: [AppController],
   providers: [AppService],
 })
