@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsString, IsUUID, Length, Min, IsDate } from 'class-validator';
+import { IsInt, IsString, IsUUID, Length, IsDate, Min } from 'class-validator'; 
 
 
 export class CreateOrderDto {
@@ -19,36 +19,34 @@ export class CreateOrderDto {
     maxLength: 50,
   })
   @IsInt()
-  order_total_cost_ht
+  order_total_cost_ht: number;
 
   @ApiProperty({
     description: 'This field represents order total quantity',
     minLength: 1,
     maxLength: 50,
   })
-  @IsInt()
-  order_total_quantity
+  @Min(1)
+  order_total_quantity: number;
 
   @ApiProperty({
     description: 'This field represents order created at',
     minLength: 1,
-    maxLength: 50,
+    maxLength: 20,
   })
   @IsDate()
-  created_at
+  created_at: Date;
 
   @ApiProperty({
     description: 'This field represents deliver at',
     minLength: 1,
-    maxLength: 50,
+    maxLength: 20,
   })
   @IsDate()
-  deliver_at
+  deliver_at: Date;
 
   @ApiProperty({
     description: 'This field represents User UUID',
-    minLength: 1,
-    maxLength: 1000,
   })
   @IsUUID()
   @Length(36, 36)
@@ -56,17 +54,9 @@ export class CreateOrderDto {
 
 
   @ApiProperty({
-    description: 'This field represents User UUID',
-    minLength: 1,
-    maxLength: 1000,
-  })
-  @IsUUID()
-  User: string;
-
-  @ApiProperty({
     description: 'This field represents products',
     minLength: 1,
-    maxLength: 1000,
+    maxLength: 50,
   })
 @IsString()
 @Length(1, 50)
@@ -75,8 +65,6 @@ export class CreateOrderDto {
 
   @ApiProperty({
     description: 'This field represents the product UUID',
-    minLength: 1,
-    maxLength: 1000,
   })
   @IsUUID()
   @Length(36, 36)
