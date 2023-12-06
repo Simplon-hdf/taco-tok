@@ -2,66 +2,28 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma.service';
-import NormalizedResponse from 'src/utils/normalized-response';
 
 @Injectable()
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
-  public async create(createUserDto: CreateUserDto) {
-    const createdUser = new NormalizedResponse(
-      `User ${createUserDto.pseudo} has been created`,
-      await this.prisma.users.create({
-        data: {
-          Pseudo: createUserDto.pseudo,
-          Mail: createUserDto.mail,
-        },
-      }),
-    );
-    return createdUser.toJSON();
+  create(createUserDto: CreateUserDto) {
+    return 'This action adds a new user';
   }
 
   findAll() {
     return `This action returns all users`;
   }
 
-  public async getByUUID(uuid: string) {
-    const gettedUser = new NormalizedResponse(
-      `User ${uuid} has been found`,
-      await this.prisma.users.findUnique({
-        where: {
-          UUID: uuid,
-        },
-      }),
-    );
-    return gettedUser.toJSON();
+  findOne(id: number) {
+    return `This action returns a #${id} user`;
   }
 
-  public async updateByUUID(uuid: string, updateUserDto: UpdateUserDto) {
-    const updatedUser = new NormalizedResponse(
-      `User ${updateUserDto.pseudo} has been updated`,
-      await this.prisma.users.update({
-        where: {
-          UUID: uuid,
-        },
-        data: {
-          Pseudo: !!updateUserDto.pseudo ? updateUserDto.pseudo : undefined,
-          Mail: !!updateUserDto.mail ? updateUserDto.mail : undefined,
-        },
-      }),
-    );
-    return updatedUser.toJSON();
+  update(id: number, updateUserDto: UpdateUserDto) {
+    return `This action updates a #${id} user`;
   }
 
-  public async deleteByUUID(uuid: string) {
-    const deletedUser = new NormalizedResponse(
-      `User ${uuid} has been deleted`,
-      await this.prisma.users.delete({
-        where: {
-          UUID: uuid,
-        },
-      }),
-    );
-    return deletedUser.toJSON();
+  remove(id: number) {
+    return `This action removes a #${id} user`;
   }
 }

@@ -17,21 +17,18 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  @Get(':uuid')
-  public getByUUID(@Param('uuid') uuid: string) {
-    return this.usersService.getByUUID(uuid);
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.usersService.findOne(+id);
   }
 
-  @Patch(':uuid')
-  public updateByUUID(
-    @Param('uuid') uuid: string,
-    @Body() updateUserDto: UpdateUserDto,
-  ) {
-    return this.usersService.updateByUUID(uuid, updateUserDto);
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    return this.usersService.update(+id, updateUserDto);
   }
 
-  @Delete(':uuid')
-  public deleteByUUID(@Param('uuid') uuid: string) {
-    return this.usersService.deleteByUUID(uuid);
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.usersService.remove(+id);
   }
 }

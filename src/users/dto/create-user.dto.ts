@@ -1,11 +1,11 @@
-import { IsEmail, IsString, Length } from 'class-validator';
+export class CreateUserDto {}
+"user_UUID" VARCHAR(36) NOT NULL,
+"user_pseudo" VARCHAR(20) NOT NULL,
+"username" VARCHAR(30) NOT NULL,
+"user_password" VARCHAR(72) NOT NULL,
+"created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-export class CreateUserDto {
-  @IsString()
-  @Length(5, 50)
-  pseudo: string;
-
-  @IsEmail()
-  @Length(2, 75)
-  mail: string;
-}
+user_pseudo
+username
+user_password
+created_at
