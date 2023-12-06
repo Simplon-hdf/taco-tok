@@ -8,6 +8,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DB_URL")
+  
 }
 
 model Products {
@@ -19,6 +20,8 @@ model Products {
   created_at       DateTime @default(now())
   updated_at       DateTime @updatedAt
   Orders           Order[]  @relation("belong_Products")
+  Belong           Belong[] 
+  
 }
 
 model User {
@@ -28,10 +31,11 @@ model User {
   user_password String   @db.VarChar(72)
   created_at   DateTime  @default(now())
   Orders       Order[]   @relation("is_ordered_by")
+
 }
 
 model Order {
-  order_number    Int        @id @default(autoincrement())
+  order_number    Int        @id @unique @default(autoincrement())
   order_total_cost_ht Int
   order_total_quantity Int
   created_at      DateTime   @default(now())
@@ -40,4 +44,18 @@ model Order {
   User            User       @relation("is_ordered_by", fields: [user_UUID], references: [user_UUID])
   Products        Products   @relation("belong_Products", fields: [product_UUID], references: [product_UUID])
   product_UUID    String    
+  Belong          Belong[]
+ 
+}
+
+
+model Belong {
+order_number       Int   
+product_UUID      String
+product_quantity   Int
+Products    Products   @relation(fields : [product_UUID], references: [product_UUID])
+Order       Order      @relation(fields : [order_number], references: [order_number])
+
+@@id([order_number, product_UUID, product_quantity])
+
 }
