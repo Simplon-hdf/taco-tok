@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { CreateProductDto } from './dto/create-product.dto';
-import NormalizedResponse from 'src/utils/normalized-response';
+import NormalizedResponse from 'src/utils/normalized.response';
 import { UpdateProductDto } from './dto/update-product.dto';
 
 @Injectable()
@@ -13,14 +13,13 @@ export class ProductsService {
       `Product ${createProductDto.name} has been registered`,
       await this.prisma.products.create({
         data: {
-          Name: createProductDto.name,
-          Description: createProductDto.description,
-          Price: createProductDto.price,
-          Author: {
-            connect: {
-              UUID: createProductDto.owner_uuid,
-            },
-          },
+          product_UUID: createProductDto.uuid,
+          product_name: createProductDto.name,
+          product_description: createProductDto.description,
+          product_price: createProductDto.price,
+          product_quantity: createProductDto.quantity,
+          created_at: createProductDto.created_at,
+          updated_at: createProductDto.updated_at,
         },
       }),
     ).toJSON();
@@ -31,7 +30,7 @@ export class ProductsService {
       `Product for '${uuid}' uuid has been found`,
       await this.prisma.products.findUnique({
         where: {
-          UUID: uuid,
+          product_UUID: uuid,
         },
       }),
     ).toJSON();
@@ -42,12 +41,12 @@ export class ProductsService {
       `Product for '${uuid}' uuid has been updated`,
       await this.prisma.products.update({
         where: {
-          UUID: uuid,
+          product_UUID: uuid,
         },
         data: {
-          Name: updateProductDto.name,
-          Description: updateProductDto.description,
-          Price: updateProductDto.price,
+          product_name: updateProductDto.name,
+          product_description: updateProductDto.description,
+          product_price: updateProductDto.price,
         },
       }),
     ).toJSON();
@@ -56,7 +55,7 @@ export class ProductsService {
   public async deleteByUUID(uuid: string) {
     return new NormalizedResponse(
       `Product for '${uuid} has been deleted'`,
-      await this.prisma.products.delete({ where: { UUID: uuid } }),
+      await this.prisma.products.delete({ where: { product_UUID: uuid } }),
     ).toJSON();
   }
 
