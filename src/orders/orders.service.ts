@@ -3,34 +3,70 @@ import { UpdateOrderDto } from './dto/update-order.dto';
 import { PrismaService } from 'src/prisma.service';
 import NormalizedResponse from 'src/utils/normalized.response';
 import { CreateOrderDto } from './dto/create-order.dto';
+import { map } from 'rxjs';
+import { Product } from 'src/products/entities/product.entity';
 
 @Injectable()
 export class OrdersService {
   constructor(private readonly prisma: PrismaService) { }
 
-  public async create(createOrderDto: CreateOrderDto) {
-    const createUser = new NormalizedResponse('Order ${createOrderDto.order_number} has been created',
+  public async createOrder(createOrderDto: CreateOrderDto) {
+ 
+   const createOrders = new NormalizedResponse('A new order has been created',
       await this.prisma.order.create({
         data: {
-          order_number: createOrderDto.order_number,
           order_total_cost_ht: createOrderDto.order_total_cost_ht,
           order_total_quantity: createOrderDto.order_total_quantity,
           created_at: createOrderDto.created_at,
           deliver_at: createOrderDto.deliver_at,
-          user_UUID: createOrderDto.user_UUID,
-          product_UUID: createOrderDto.product_UUID,
+          User: {
+            connect: {
+              user_UUID: createOrderDto.user_UUID,
+            },
+          },
+        },
+      }),
+    );
+    return createOrders.toJSON();
+    
+  }
+
+  
+
+
+
+
+
+
+
+  
+  public async createBelong(createOrderDto: CreateOrderDto) {
+    const createUser = new NormalizedResponse('Order ${createOrderDto.order_number} has been created',
+      await this.prisma.belong.create({
+        data: {
+          Products: {
+            connect: {
+              product_UUID: createOrderDto.Products
+            },
+          },
+          Order: {
+            connect: {
+              order_number: (await this.createOrder(createOrderDto)).data.order_number,
+            },
+          },
         },
       }),
     );
     return createUser.toJSON();
   }
 
+
   public async getByOrderNumber(order_number: number) {
     return new NormalizedResponse(
       `Product for '${order_number}' uuid has been found`,
       await this.prisma.order.findUnique({
         where: {
-     order_number: order_number,
+          order_number: order_number,
         },
       }),
     ).toJSON();

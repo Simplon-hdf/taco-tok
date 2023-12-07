@@ -20,7 +20,7 @@ function initSwagger(app: INestApplication) {
     app,
     SwaggerModule.createDocument(
       app,
-      new DocumentBuilder().addServer('taco-tok').build(),
+      new DocumentBuilder().build(),
     ),
   );
 }
