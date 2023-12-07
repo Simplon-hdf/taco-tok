@@ -21,7 +21,7 @@ export class OrdersService {
           order_total_cost_ht: createOrderDto.order_total_cost_ht,
           order_total_quantity: createOrderDto.order_total_quantity,
           created_at: createOrderDto.created_at,
-          deliver_at: createOrderDto.deliver_at, // deliver_at: const name = new Date()
+          deliver_at: createOrderDto.deliver_at, 
           User: {
             connect: {
               user_UUID: createOrderDto.user_UUID,
