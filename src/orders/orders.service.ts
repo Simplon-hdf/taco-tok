@@ -4,13 +4,15 @@ import { PrismaService } from 'src/prisma.service';
 import NormalizedResponse from 'src/utils/normalized.response';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { map } from 'rxjs';
+import { Product } from 'src/products/entities/product.entity';
 
 @Injectable()
 export class OrdersService {
   constructor(private readonly prisma: PrismaService) { }
 
   public async createOrder(createOrderDto: CreateOrderDto) {
-    const createUser = new NormalizedResponse('Order ${createOrderDto.order_number} has been created',
+ 
+   const createOrders = new NormalizedResponse('A new order has been created',
       await this.prisma.order.create({
         data: {
           order_total_cost_ht: createOrderDto.order_total_cost_ht,
@@ -22,33 +24,29 @@ export class OrdersService {
               user_UUID: createOrderDto.user_UUID,
             },
           },
-        }
+        },
       }),
     );
-    return createUser.toJSON();
+    return createOrders.toJSON();
+    
   }
 
-
-  public async productOrder(createOrderDto: CreateOrderDto) {
-    const createUser = new NormalizedResponse('Order ${createOrderDto.product_UIID} has been created',
-      await this.prisma.products.create({
-        data: {
+  
 
 
-        }
-      }),
-    );
-    return createUser.toJSON();
-  }
 
 
+
+
+
+  
   public async createBelong(createOrderDto: CreateOrderDto) {
     const createUser = new NormalizedResponse('Order ${createOrderDto.order_number} has been created',
       await this.prisma.belong.create({
         data: {
           Products: {
             connect: {
-              product_UUID: (await this.productOrder(createOrderDto)).data.product_UUID
+              product_UUID: createOrderDto.Products
             },
           },
           Order: {
