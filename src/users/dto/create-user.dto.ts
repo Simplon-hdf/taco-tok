@@ -3,6 +3,9 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsUUID, IsString, Length, IsDate } from 'class-validator';
 
 export class CreateUserDto {
+  static password(password: any, arg1: number): any {
+    throw new Error('Method not implemented.');
+  }
   @ApiProperty({
     description: 'This field represents the user UUID',
   })

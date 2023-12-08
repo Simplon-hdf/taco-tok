@@ -51,7 +51,7 @@ export class UsersService {
         data: {
           user_pseudo: !!updateUserDto.pseudo ? updateUserDto.pseudo : undefined,
           username: !!updateUserDto.name ? updateUserDto.name : undefined,
-          user_password : !!updateUserDto.password ? updateUserDto.password : undefined,
+          user_password : !!updateUserDto.password ? await bcrypt.hash(CreateUserDto.password, 12) : undefined,
           user_UUID: !!updateUserDto.UUID ? updateUserDto.UUID : undefined,
           created_at : !!updateUserDto.order_at ? updateUserDto.order_at : undefined,
         },
