@@ -3,6 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma.service';
 import NormalizedResponse from 'src/utils/normalized.response';
+import * as bcrypt from 'bcrypt'
 
 @Injectable()
 export class UsersService {
@@ -15,7 +16,7 @@ export class UsersService {
         data: {
           user_pseudo: createUserDto.pseudo,
           user_UUID: createUserDto.UUID,
-          user_password: createUserDto.password,
+          user_password: await bcrypt.hash(createUserDto.password, 12),
           username: createUserDto.name,
           created_at: createUserDto.order_at,
         },
