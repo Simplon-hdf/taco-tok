@@ -68,5 +68,13 @@ export class CreateOrderDto {
   })
   @IsUUID()
   @Length(36, 36)
-  product_UUID: string;
+  product_UUID: string[];
 }
+
+@ApiProperty({
+  description: 'This field represents order number',
+  minLength: 1,
+  maxLength: 50,
+})
+@IsInt()
+ createOrder: number;
