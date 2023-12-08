@@ -10,6 +10,7 @@ import { Order } from './entities/order.entity';
 
 @Injectable()
 export class OrdersService {
+
   constructor(private readonly prisma: PrismaService) { }
 
   public async createOrder(createOrderDto: CreateOrderDto) {
@@ -20,7 +21,7 @@ export class OrdersService {
           order_total_cost_ht: createOrderDto.order_total_cost_ht,
           order_total_quantity: createOrderDto.order_total_quantity,
           created_at: createOrderDto.created_at,
-          deliver_at: createOrderDto.deliver_at,
+          deliver_at: createOrderDto.deliver_at, 
           User: {
             connect: {
               user_UUID: createOrderDto.user_UUID,
@@ -36,52 +37,29 @@ export class OrdersService {
   
 
 
-  public async numberOfProduct(createOrderDto: CreateOrderDto) {
+  public async belong(createOrderDto: CreateOrderDto) {
+    const createdOrder = await this.createOrder(createOrderDto);
+    const orderNumber = createdOrder.data.number;
+    const OrderedproductUUIDs = createOrderDto.product_UUID;
 
-  const  numberOfProducts = [createOrderDto.Products].map( Product => {
-        return this.prisma.belong.create({
-          data: {
-            order_number: Order.order_number, product_UUID: Product
-      }
-        }
-
-        );
-      }
-    )
+    await this.prisma.belong.createMany({
+      data: OrderedproductUUIDs.map((product_UUID) => ({
+        order_number: orderNumber,
+        product_UUID: product_UUID
+      }))
+    });
   }
 
-
-  public async createBelong(createOrderDto: CreateOrderDto) {
-    const createUser = new NormalizedResponse('Order ${createOrderDto.order_number} has been created',
-      await this.prisma.belong.create({
-        data: {
-          Products: {
-            connect: {
-              product_UUID: createOrderDto.Products
-            },
+      public async getByOrderNumber(order_number: number) {
+      return new NormalizedResponse(
+        `Product for '${order_number}' uuid has been found`,
+        await this.prisma.order.findUnique({
+          where: {
+            order_number: order_number,
           },
-          Order: {
-            connect: {
-              order_number: (await this.createOrder(createOrderDto)).data.order_number,
-            },
-          },
-        },
-      }),
-    );
-    return createUser.toJSON();
-  }
-
-
-  public async getByOrderNumber(order_number: number) {
-    return new NormalizedResponse(
-      `Product for '${order_number}' uuid has been found`,
-      await this.prisma.order.findUnique({
-        where: {
-          order_number: order_number,
-        },
-      }),
-    ).toJSON();
-  }
+        }),
+      ).toJSON();
+    }
 
   public async updateByOrderNumber(order_number: number, updateOrdertDto: UpdateOrderDto) {
     return new NormalizedResponse(
