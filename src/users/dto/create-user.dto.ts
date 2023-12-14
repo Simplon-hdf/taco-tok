@@ -3,12 +3,12 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsUUID, IsString, Length, IsDate } from 'class-validator';
 
 export class CreateUserDto {
-  @ApiProperty({
-    description: 'This field represents the user UUID',
-  })
-  @IsUUID()
-  @Length(36, 36)
-  UUID: string;
+  // @ApiProperty({
+  //   description: 'This field represents the user UUID',
+  // })
+  // @IsUUID()
+  // @Length(36, 36)
+  // UUID: string;
 
   @ApiProperty({
     description: 'This field represents the user pseudo',
@@ -34,12 +34,12 @@ export class CreateUserDto {
     maxLength: 72,
   })
   @IsString()
-  @Length(72, 72)
+  @Length(1, 72)
   password: string;
 
-  @ApiProperty({
-    description: 'This field represents the date of order',
-  })
-  @IsDate()
-  order_at : Date;
+  // @ApiProperty({
+  //   description: 'This field represents the date of order',
+  // })
+  // @IsDate()
+  // order_at : Date;
 }

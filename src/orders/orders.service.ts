@@ -3,10 +3,8 @@ import { UpdateOrderDto } from './dto/update-order.dto';
 import { PrismaService } from 'src/prisma.service';
 import NormalizedResponse from 'src/utils/normalized.response';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { map } from 'rxjs';
-import { Product } from 'src/products/entities/product.entity';
-import { Prisma } from '@prisma/client';
-import { Order } from './entities/order.entity';
+import { addDays } from 'date-fns';
+
 
 @Injectable()
 export class OrdersService {
@@ -14,14 +12,16 @@ export class OrdersService {
   constructor(private readonly prisma: PrismaService) { }
 
   public async createOrder(createOrderDto: CreateOrderDto) {
+    const createdAt = new Date()
+    const deliverAt = addDays(new Date(createdAt), 7);
 
     const createOrders = new NormalizedResponse('A new order has been created',
       await this.prisma.order.create({
         data: {
           order_total_cost_ht: createOrderDto.order_total_cost_ht,
           order_total_quantity: createOrderDto.order_total_quantity,
-          created_at: createOrderDto.created_at,
-          deliver_at: createOrderDto.deliver_at, 
+          created_at: createdAt,
+          deliver_at: deliverAt, 
           User: {
             connect: {
               user_UUID: createOrderDto.user_UUID,
@@ -62,6 +62,8 @@ export class OrdersService {
     }
 
   public async updateByOrderNumber(order_number: number, updateOrdertDto: UpdateOrderDto) {
+    const createdAt = new Date()
+    const deliverAt = addDays(new Date(createdAt), 7);
     return new NormalizedResponse(
       `Order for '${order_number}' uuid has been updated`,
       await this.prisma.order.update({
@@ -72,8 +74,8 @@ export class OrdersService {
           order_number: updateOrdertDto.order_number,
           order_total_cost_ht: updateOrdertDto.order_total_cost_ht,
           order_total_quantity: updateOrdertDto.order_total_quantity,
-          created_at: updateOrdertDto.created_at,
-          deliver_at: updateOrdertDto.deliver_at,
+          created_at: createdAt,
+          deliver_at: deliverAt,
         },
       }),
     ).toJSON();

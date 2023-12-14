@@ -29,21 +29,7 @@ export class CreateOrderDto {
   @Min(1)
   order_total_quantity: number;
 
-  @ApiProperty({
-    description: 'This field represents order created at',
-    minLength: 1,
-    maxLength: 20,
-  })
-  @IsDate()
-  created_at: Date;
 
-  @ApiProperty({
-    description: 'This field represents deliver at',
-    minLength: 1,
-    maxLength: 20,
-  })
-  @IsDate()
-  deliver_at: Date;
 
   @ApiProperty({
     description: 'This field represents User UUID',
@@ -69,7 +55,6 @@ export class CreateOrderDto {
   @IsUUID()
   @Length(36, 36)
   product_UUID: string[];
-}
 
 @ApiProperty({
   description: 'This field represents order number',
@@ -78,3 +63,4 @@ export class CreateOrderDto {
 })
 @IsInt()
  createOrder: number;
+}
