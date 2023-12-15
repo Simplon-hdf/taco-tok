@@ -3,11 +3,15 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma.service';
 import NormalizedResponse from 'src/utils/normalized.response';
-import * as bcrypt from 'bcrypt'
+import * as bcrypt from 'bcrypt';
+
+
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly prisma: PrismaService) {}
+  private saltGenRound = 12;
+
+  constructor(private readonly prisma: PrismaService) { }
 
   public async create(createUserDto: CreateUserDto) {
     const createdUser = new NormalizedResponse(
@@ -15,10 +19,9 @@ export class UsersService {
       await this.prisma.user.create({
         data: {
           user_pseudo: createUserDto.pseudo,
-          user_UUID: createUserDto.UUID,
-          user_password: await bcrypt.hash(createUserDto.password, 12),
+          user_password: await bcrypt.hash(createUserDto.password, this.saltGenRound),
+
           username: createUserDto.name,
-          created_at: createUserDto.order_at,
         },
       }),
     );
@@ -42,6 +45,7 @@ export class UsersService {
   }
 
   public async updateByUUID(uuid: string, updateUserDto: UpdateUserDto) {
+    const createdAt = new Date()
     const updatedUser = new NormalizedResponse(
       `User ${updateUserDto.pseudo} has been updated`,
       await this.prisma.user.update({
@@ -51,9 +55,9 @@ export class UsersService {
         data: {
           user_pseudo: !!updateUserDto.pseudo ? updateUserDto.pseudo : undefined,
           username: !!updateUserDto.name ? updateUserDto.name : undefined,
-          user_password : !!updateUserDto.password ? await bcrypt.hash(CreateUserDto.password, 12) : undefined,
-          user_UUID: !!updateUserDto.UUID ? updateUserDto.UUID : undefined,
-          created_at : !!updateUserDto.order_at ? updateUserDto.order_at : undefined,
+          user_password: !!updateUserDto.password ? updateUserDto.password : undefined,
+          user_UUID: !!uuid ? uuid : undefined,
+          created_at: !!createdAt ? createdAt : undefined,
         },
       }),
     );

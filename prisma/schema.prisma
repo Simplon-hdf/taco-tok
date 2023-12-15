@@ -24,7 +24,7 @@ model Products {
 model User {
   user_UUID     String   @id @default(uuid()) @db.VarChar(36)
   user_pseudo   String   @unique @db.VarChar(20)
-  username      String   @unique @db.VarChar(30)
+  username      String   @db.VarChar(30)
   user_password String   @db.VarChar(72)
   created_at    DateTime @default(now())
   Orders        Order[]  @relation()
