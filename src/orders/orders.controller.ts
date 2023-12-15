@@ -10,20 +10,22 @@ export class OrdersController {
 
 
   @Post()
-  create(@Body() createOrderDto: CreateOrderDto) {
-    return this.ordersService.createOrder(createOrderDto);
+  create(
+    @Param() uuid: string,
+    @Body() createOrderDto: CreateOrderDto) {
+    return this.ordersService.createOrder(createOrderDto, uuid);
   }
-  @Get()
-  findOne(@Param('NumberOrder') order_number: number) {
+  @Get(':Order')
+  findOne(@Param('Order') order_number: number) {
     return this.ordersService.getByOrderNumber(order_number);
   }
 
-  @Patch()
+  @Patch(':Order')
   update(@Param('Order') order_number: number, @Body() updateOrderDto: UpdateOrderDto) {
     return this.ordersService.updateByOrderNumber(order_number, updateOrderDto);
   }
 
-  @Delete()
+  @Delete(':Order')
   remove(@Param('Order') order_number: number) {
     return this.ordersService.removeByOrderNumber(order_number);
   }

@@ -11,7 +11,6 @@ export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
   public async create(createUserDto: CreateUserDto) {
-    const createdAt = new Date()
     const createdUser = new NormalizedResponse(
       `User ${createUserDto.pseudo} has been created`,
       await this.prisma.user.create({
@@ -19,7 +18,6 @@ export class UsersService {
           user_pseudo: createUserDto.pseudo,
            user_password: createUserDto.password,
           username: createUserDto.name,
-          created_at: createdAt,
         },
       }),
     );
