@@ -3,12 +3,15 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma.service';
 import NormalizedResponse from 'src/utils/normalized.response';
-import { addDays } from 'date-fns';
+import * as bcrypt from 'bcrypt';
+
 
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly prisma: PrismaService) {}
+  private saltGenRound = 12;
+
+  constructor(private readonly prisma: PrismaService) { }
 
   public async create(createUserDto: CreateUserDto) {
     const createdUser = new NormalizedResponse(
@@ -16,7 +19,8 @@ export class UsersService {
       await this.prisma.user.create({
         data: {
           user_pseudo: createUserDto.pseudo,
-           user_password: createUserDto.password,
+          user_password: await bcrypt.hash(createUserDto.password, this.saltGenRound),
+
           username: createUserDto.name,
         },
       }),
@@ -51,9 +55,9 @@ export class UsersService {
         data: {
           user_pseudo: !!updateUserDto.pseudo ? updateUserDto.pseudo : undefined,
           username: !!updateUserDto.name ? updateUserDto.name : undefined,
-          user_password : !!updateUserDto.password ? updateUserDto.password : undefined,
+          user_password: !!updateUserDto.password ? updateUserDto.password : undefined,
           user_UUID: !!uuid ? uuid : undefined,
-          created_at : !!createdAt ? createdAt : undefined,
+          created_at: !!createdAt ? createdAt : undefined,
         },
       }),
     );
