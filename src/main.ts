@@ -20,7 +20,7 @@ function initSwagger(app: INestApplication) {
     app,
     SwaggerModule.createDocument(
       app,
-      new DocumentBuilder().build(),
+      new DocumentBuilder().addServer('ecommerce').build(),
     ),
   );
 }
